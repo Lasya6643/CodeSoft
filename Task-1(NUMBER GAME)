@@ -1,0 +1,72 @@
+import java.util.Scanner;
+
+class Range {
+    public int generate(int max, int min) {
+        return (int) (Math.random() * (max - min + 1) + min);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner s = new Scanner(System.in);
+        Range rg = new Range();
+        int totalGames = 0; // Tracks total games played
+        int totalWins = 0; // Tracks total games won
+        final int MAX_ATTEMPTS = 5; // Set maximum attempts per round
+
+        while (true) {
+            System.out.println("Enter the minimum number:");
+            int min = s.nextInt();
+            System.out.println("Enter the maximum number:");
+            int max = s.nextInt();
+            s.nextLine(); // Consume newline character
+
+            // Ensure valid range
+            if (max <= min) {
+                System.out.println("Invalid range! Maximum must be greater than minimum.");
+                continue;
+            }
+
+            int targetNumber = rg.generate(max, min);
+            int attempts = 0; // Track attempts for the current game
+            boolean won = false; // Track if user wins the round
+
+            while (attempts < MAX_ATTEMPTS) {
+                System.out.println("Guess a number between " + min + " and " + max + " (Attempts left: " + (MAX_ATTEMPTS - attempts) + ")");
+                int guess = s.nextInt();
+                attempts++;
+
+                if (guess > targetNumber) {
+                    System.out.println("It's lower!");
+                } else if (guess < targetNumber) {
+                    System.out.println("It's greater!");
+                } else {
+                    System.out.println("Correct guess!");
+                    totalWins++;
+                    won = true;
+                    break;
+                }
+            }
+
+            if (!won) {
+                System.out.println("Sorry, you've run out of attempts! The correct number was: " + targetNumber);
+            }
+
+            totalGames++;
+            System.out.println("Attempts in this game: " + attempts);
+            System.out.println("Total wins: " + totalWins);
+
+            double winRate = (double) totalWins / totalGames * 100; // Calculate win rate
+            System.out.printf("Your win rate is %.2f%%\n", winRate);
+
+            System.out.println("Do you want to play again? (y / n)");
+            String playAgain = s.next();
+            if (!playAgain.equalsIgnoreCase("y")) {
+                System.out.println("Thanks for playing!");
+                break;
+            }
+        }
+
+        s.close();
+    }
+}
